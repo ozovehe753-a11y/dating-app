@@ -1,7 +1,7 @@
 import './globals.css';
 
 export const metadata = {
-  title: 'Heartly — Find Your Person',
+  title: 'DESIRE — Find Your Person',
   description: 'A modern dating experience built for meaningful connections.'
 };
 

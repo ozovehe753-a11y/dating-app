@@ -8,21 +8,53 @@ datasource db {
 }
 
 model User {
-  id           String   @id @default(cuid())
-  name         String
-  email        String   @unique
-  passwordHash String
-  age          Int
-  gender       String
-  interestedIn String
-  location     String
-  bio          String?  @db.VarChar(500)
-  imageUrl     String?
-  createdAt    DateTime @default(now())
-  sentLikes    Like[]   @relation("SentLikes")
+  id            String   @id @default(cuid())
+
+  name          String
+  email         String   @unique
+  passwordHash  String
+
+  age           Int
+  gender        String
+
+  interestedIn  String
+  lookingFor    String
+
+  location      String
+
+  minAge        Int?
+  maxAge        Int?
+
+  distance      String?
+
+  occupation    String?
+  education     String?
+  height        String?
+
+  smoking       String?
+  drinking      String?
+
+  interests     String?
+
+  bio           String? @db.VarChar(500)
+
+  imageUrl      String?
+  photos String[] @default([])
+ 
+  
+
+  createdAt     DateTime @default(now())
+
+
+  sentLikes     Like[]  @relation("SentLikes")
   receivedLikes Like[]  @relation("ReceivedLikes")
-  matchesA     Match[]  @relation("MatchA")
-  matchesB     Match[]  @relation("MatchB")
+
+  matchesA      Match[] @relation("MatchA")
+  matchesB      Match[] @relation("MatchB")
+
+ sentMessages     Message[] @relation("SentMessages")
+receivedMessages Message[] @relation("ReceivedMessages")
+
 }
 
 model Like {
@@ -45,4 +77,18 @@ model Match {
   userB     User     @relation("MatchB", fields: [userBId], references: [id], onDelete: Cascade)
 
   @@unique([userAId, userBId])
+}
+
+model Message {
+  id         String   @id @default(cuid())
+  senderId   String
+  receiverId String
+  content    String   @db.VarChar(1000)
+  createdAt  DateTime @default(now())
+
+  sender   User @relation("SentMessages", fields: [senderId], references: [id], onDelete: Cascade)
+  receiver User @relation("ReceivedMessages", fields: [receiverId], references: [id], onDelete: Cascade)
+
+  @@index([senderId, receiverId])
+  @@index([createdAt])
 }
